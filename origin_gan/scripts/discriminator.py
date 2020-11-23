@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow.keras as kr
 
-class generator:
+class discriminator:
 
     """
     encapsulated class for generator 
@@ -23,7 +23,7 @@ class generator:
 
 
 
-class _generator_model(kr.Model):
+class _discriminator_model(kr.Model):
 
     def __init__(self):
         super().__init__()
@@ -37,7 +37,7 @@ class _generator_model(kr.Model):
 if __name__ == "__main__":
 
     """
-    generate toy data to test the generator
+    generate toy data to test the discriminator
     """
 
 
