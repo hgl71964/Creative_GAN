@@ -19,7 +19,7 @@ class discriminator_model(kr.Model):
         self.d1 = (kr.layers.Flatten())
         self.d2 = (kr.layers.Dense(1))
     
-    def call(self, x, train=False):
+    def call(self, x, training = False):
         """
         Args:
             x: tensor; shape -> [batch_size, height, width, channel_num]
