@@ -29,7 +29,7 @@ class generator_model(kr.Model):
         self.l.add(kr.layers.Conv2DTranspose(1, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, 1)
 
     
-    def call(self, x, train = False):
+    def call(self, x, training = False):
         return self.l(x);
 
 

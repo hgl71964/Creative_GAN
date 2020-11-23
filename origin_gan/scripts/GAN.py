@@ -22,31 +22,31 @@ class GAN:
         self.generator = generator.generator_model()
         self.discriminator = discriminator.discriminator_model() 
 
-        self.loss_metric = kr.losses.BinaryCrossentropy(from_logits=True)
+        self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
     
-
-
     @tf.function
-    def train_step(self, images):
+    def train_step(self, real_images):
         noise = tf.random.normal([self.batch_size, self.noise_dim])
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-            generated_images = self.generator(noise)
+            fake_images = self.generator(noise, training = True)
 
-            real_output = self.discriminator(images)
-            fake_output = self.discriminator(generated_images)
+            real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
+            fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
 
             gen_loss = self.G_loss(fake_output)
             disc_loss = self.D_loss(real_output, fake_output)
 
-        gradients_of_generator = gen_tape.gradient(gen_loss, self.generator.trainable_variables)
-        gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
+        G_grad = gen_tape.gradient(gen_loss, self.generator.trainable_variables)
+        D_grad = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
 
-        generator_optimizer.apply_gradients(zip(gradients_of_generator, self.generator.trainable_variables))
-        discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
+        generator_optimizer.apply_gradients(zip(G_grad, self.generator.trainable_variables))
+        discriminator_optimizer.apply_gradients(zip(D_grad, discriminator.trainable_variables))
 
-    def D_loss(self):
-        return 
-    def G_loss(self):
-        return 
+    def D_loss(self, real_output, fake_output):
+        return self.loss_metric(tf.ones_like(real_output), real_output) \
+                + self.loss_metric(tf.zeros_like(fake_output), fake_output)  #  -( ylog(p) + (1-y) log (1-p))
+
+    def G_loss(self, fake_output):
+        return self.loss_metric(tf.ones_like(fake_output), fake_output)  #  the training trick, obtain strong early gradients
