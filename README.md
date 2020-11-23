@@ -1,1 +1,3 @@
-# Creative_GAN
+# Creative GAN
+
+##### generate art with GAN
