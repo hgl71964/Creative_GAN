@@ -14,7 +14,7 @@ class discriminator:
 
         self.model = _discriminator_model()
         self.loss = kr.losses.BinaryCrossentropy(from_logits=True)
-        
+
 
     
     def training(self):
