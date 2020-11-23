@@ -12,7 +12,9 @@ class discriminator:
                 ):
         super().__init__()
 
-        self.model = model
+        self.model = _discriminator_model()
+        self.loss = kr.losses.BinaryCrossentropy(from_logits=True)
+        
 
     
     def training(self):
@@ -27,16 +29,10 @@ class _discriminator_model(kr.Model):
 
     def __init__(self):
         super().__init__()
-        """
-        4+D tensor with shape: batch_shape + (channels, rows, cols) if data_format='channels_first' 
-        or 4+D tensor with shape: batch_shape + (rows, cols, channels) if data_format='channels_last'.
-
-
-        """
         self.l = kr.Sequential()
 
         self.l.add(kr.layers.Conv2D(filters=64, kernel_size=(5,5), 
-                        strides=(2,2), padding="same", data_format="channels_last"))
+                        strides=(2,2), padding="same", data_format="channels_last"))  # [batch_shape, rows, cols, channels] if data_format='channels_last'.
 
         self.l.add(kr.layers.LeakyReLU())
         self.l.add(kr.layers.Dropout(0.3))
@@ -51,7 +47,7 @@ class _discriminator_model(kr.Model):
     def call(self, x):
         """
         Args:
-            x: tensor; shape -> [batch_size, 1, 16, 16]
+            x: tensor; shape -> [batch_size, height, width, channel_num]
         """
         return self.l(x);  # [batch_size, 1]
 
@@ -63,12 +59,11 @@ if __name__ == "__main__":
     generate toy data to test the discriminator
     """
 
-
     # [batch_size, height, width, channel_num]
-    data = tf.random.normal(shape=(10,16,16,1),stddev=10)
-    noise = tf.random.uniform(shape=(10,16,16,1))
+    data = tf.random.normal(shape=(10, 16, 16, 1), stddev=10)
+    noise = tf.random.uniform(shape=(10, 16, 16, 1))
 
-    
+
     m = _discriminator_model()
     print(m(data).shape)
 
