@@ -10,10 +10,11 @@ class GAN:
 
     def __init__(self, 
                 batch_size, #  int, 
+                epoch,  #  int,
                 noise_dim,  #  tuple, [batchsize, noise_dim]
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 ):
-
+        self.epoch = epoch
         self.noise_dim = noise_dim
         self.batch_size = batch_size
         self.generator_optimizer = kr.optimizers.Adam(lr[0])
@@ -25,8 +26,16 @@ class GAN:
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
     
+    def train(self, real_images):
+
+        for epoch in range(self.epochs):
+            pass
+
+        return 
+
+    
     @tf.function
-    def train_step(self, real_images):
+    def train_step(self, real_images):   # one training step
         noise = tf.random.normal([self.batch_size, self.noise_dim])
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
