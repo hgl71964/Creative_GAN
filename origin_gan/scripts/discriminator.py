@@ -27,10 +27,33 @@ class _discriminator_model(kr.Model):
 
     def __init__(self):
         super().__init__()
+        """
+        4+D tensor with shape: batch_shape + (channels, rows, cols) if data_format='channels_first' 
+        or 4+D tensor with shape: batch_shape + (rows, cols, channels) if data_format='channels_last'.
 
+
+        """
+        self.l = kr.Sequential()
+
+        self.l.add(kr.layers.Conv2D(filters=64, kernel_size=(5,5), 
+                        strides=(2,2), padding="same", data_format="channels_last"))
+
+        self.l.add(kr.layers.LeakyReLU())
+        self.l.add(kr.layers.Dropout(0.3))
+
+        self.l.add(kr.layers.Conv2D(128, (5, 5), strides=(2, 2), padding='same'))
+        self.l.add(kr.layers.LeakyReLU())
+        self.l.add(kr.layers.Dropout(0.3))
+
+        self.l.add(kr.layers.Flatten())
+        self.l.add(kr.layers.Dense(1))
     
     def call(self, x):
-        return x;
+        """
+        Args:
+            x: tensor; shape -> [batch_size, 1, 16, 16]
+        """
+        return self.l(x);  # [batch_size, 1]
 
 
 
@@ -41,9 +64,13 @@ if __name__ == "__main__":
     """
 
 
-    #  assume dataset has 10 images, each (28*28)
-    data = tf.random.uniform(shape=(10,28,28))
+    # [batch_size, height, width, channel_num]
+    data = tf.random.normal(shape=(10,16,16,1),stddev=10)
+    noise = tf.random.uniform(shape=(10,16,16,1))
 
-    print(data.shape)
+    
+    m = _discriminator_model()
+    print(m(data).shape)
+
 
     
