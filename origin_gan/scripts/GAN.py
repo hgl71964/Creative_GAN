@@ -27,7 +27,7 @@ class GAN:
 
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
-        self.checkpoint(checkpoint_prefix=checkpoint_prefix)
+        self.checkpoint(checkpoint_prefix = checkpoint_prefix)
 
     
     def train(self, image_dataset):
