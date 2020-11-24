@@ -14,6 +14,7 @@ class GAN:
                 epoch,  #  int,
                 noise_dim,  #  int,
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
+                checkpoint_prefix = "origin_gan",
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
@@ -26,17 +27,16 @@ class GAN:
 
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
+        self.checkpoint(checkpoint_prefix=checkpoint_prefix)
+
     
     def train(self, image_dataset):
 
         for epoch in range(self.epoch):
-
             for real_images in image_dataset:
-            
                 self.train_step(real_images)
 
             if (epoch + 1) % 15 == 0:   # output stats
-                pass
                 self.checkpoint.save(file_prefix = "origin_gan")
                 
     
@@ -59,9 +59,9 @@ class GAN:
         self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
         self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
 
-    def checkpoint(self, checkpoint_prefix="origin_gan_"):            
+    def checkpoint(self, checkpoint_prefix):            
         checkpoint_dir = './training_checkpoints'
-        self.checkpoint_prefix = os.path.join(checkpoint_dir, "origin_gan_")
+        self.checkpoint_prefix = os.path.join(checkpoint_dir, checkpoint_prefix)
         self.checkpoint = tf.train.Checkpoint(generator_optimizer=self.G_opt,
                                  discriminator_optimizer=self.D_opt,
                                  generator=self.generator,
