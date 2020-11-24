@@ -33,6 +33,7 @@ class GAN:
     def train(self, image_dataset):
 
         for epoch in range(self.epoch):
+            print("Epoch: ", epoch+1)
             for real_images in image_dataset:
                 self._train_step(real_images)  #  real_images: [batch_size, rows, cols, channels]: (batch_size, 28, 28, 1)
 
@@ -54,8 +55,8 @@ class GAN:
             D_loss = self._D_loss(real_output, fake_output)
 
             #  show stats
-            tf.print(G_loss)
-            tf.print(D_loss)
+            tf.print("G_loss: ", G_loss)
+            tf.print("D_loss: ", D_loss)
 
         G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
         D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
@@ -80,7 +81,7 @@ class GAN:
 
 
 if __name__ == "__main__":
-    gan = GAN(batch_size=2, epoch=2, noise_dim=10)
+    gan = GAN(noise_batch_size=2, epoch=2, noise_dim=10)
 
 
     image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
