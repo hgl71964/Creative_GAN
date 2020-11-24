@@ -34,9 +34,9 @@ class GAN:
 
         for epoch in range(self.epoch):
             for real_images in image_dataset:
-                self._train_step(real_images)  #  real_images: [batch_shape, rows, cols, channels]: (None, 28, 28, 1)
+                self._train_step(real_images)  #  real_images: [batch_size, rows, cols, channels]: (batch_size, 28, 28, 1)
 
-            if (epoch + 1) % 15 == 0:   # output stats
+            if (epoch + 1) % 15 == 0:   # output stats && save models
                 self.checkpoint.save(file_prefix = "origin_gan")
                 
     
@@ -73,3 +73,16 @@ class GAN:
                                  discriminator_optimizer=self.D_opt,
                                  generator=self.generator,
                                  discriminator=self.discriminator)
+
+
+if __name__ == "__main__":
+    gan = GAN(batch_size=2, epoch=2, noise_dim=10)
+
+
+    image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
+
+    # for i in image_dataset:
+    #     print(i.shape)
+
+    gan.train(image_dataset)
+
