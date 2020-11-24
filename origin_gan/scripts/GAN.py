@@ -44,7 +44,7 @@ class GAN:
                 total_G_loss+=G_loss
                 total_D_loss+=D_loss
 
-            if (epoch + 1) % 2 == 0:   # output stats && save models very 15 epochs
+            if (epoch + 1) % 10 == 0:   # output stats && save models very 15 epochs
                 tf.print("G_loss: ", total_G_loss)
                 tf.print("D_loss: ", total_D_loss)
             #     self.checkpoint.save(file_prefix = "origin_gan")
@@ -87,13 +87,9 @@ class GAN:
 
 
 if __name__ == "__main__":
-    gan = GAN(noise_batch_size=2, epoch=2, noise_dim=10)
-
+    gan = GAN(noise_batch_size=2, epoch=5, noise_dim=10)
 
     image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
-
-    # for i in image_dataset:
-    #     print(i.shape)
 
     gan.train(image_dataset)
 
