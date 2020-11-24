@@ -7,7 +7,7 @@ class discriminator_model(kr.Model):
         super().__init__()
 
         self.l1 = (kr.layers.Conv2D(filters=64, kernel_size=(5,5), 
-                        strides=(2,2), padding="same", data_format="channels_last"))  # [batch_shape, rows, cols, channels] if data_format='channels_last'.
+                        strides=(2,2), padding="same", data_format="channels_last"))  # [batch_size, rows, cols, channels] if data_format='channels_last'.
 
         self.a1 = (kr.layers.LeakyReLU())
         self.p1 = (kr.layers.Dropout(0.3))
