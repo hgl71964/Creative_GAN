@@ -50,14 +50,21 @@ class GAN:
             real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
             fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
 
-            G_loss = self.G_loss(fake_output)
-            D_loss = self.D_loss(real_output, fake_output)
+            G_loss = self._G_loss(fake_output)
+            D_loss = self._D_loss(real_output, fake_output)
 
         G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
         D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
 
         self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
         self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
+
+    def _D_loss(self, real_output, fake_output):
+        return self.loss_metric(tf.ones_like(real_output), real_output) \
+                + self.loss_metric(tf.zeros_like(fake_output), fake_output)  #  -( ylog(p) + (1-y) log (1-p))
+
+    def _G_loss(self, fake_output):
+        return self.loss_metric(tf.ones_like(fake_output), fake_output)  #  using the training trick, obtain strong early gradients
 
     def checkpoint(self, checkpoint_prefix):            
         checkpoint_dir = './training_checkpoints'
@@ -66,12 +73,3 @@ class GAN:
                                  discriminator_optimizer=self.D_opt,
                                  generator=self.generator,
                                  discriminator=self.discriminator)
-
-
-
-    def D_loss(self, real_output, fake_output):
-        return self.loss_metric(tf.ones_like(real_output), real_output) \
-                + self.loss_metric(tf.zeros_like(fake_output), fake_output)  #  -( ylog(p) + (1-y) log (1-p))
-
-    def G_loss(self, fake_output):
-        return self.loss_metric(tf.ones_like(fake_output), fake_output)  #  the training trick, obtain strong early gradients
