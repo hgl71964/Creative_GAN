@@ -17,8 +17,8 @@ class GAN:
         self.epoch = epoch
         self.noise_dim = noise_dim
         self.batch_size = batch_size
-        self.generator_optimizer = kr.optimizers.Adam(lr[0])
-        self.discriminator_optimizer = kr.optimizers.Adam(lr[1])  
+        self.G_opt = kr.optimizers.Adam(lr[0])
+        self.D_opt = kr.optimizers.Adam(lr[1])  
 
         self.generator = generator.generator_model()
         self.discriminator = discriminator.discriminator_model() 
@@ -50,8 +50,8 @@ class GAN:
         G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
         D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
 
-        generator_optimizer.apply_gradients(zip(G_grad, self.generator.trainable_variables))
-        discriminator_optimizer.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
+        self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
+        self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
 
     def D_loss(self, real_output, fake_output):
         return self.loss_metric(tf.ones_like(real_output), real_output) \
