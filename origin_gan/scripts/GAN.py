@@ -5,13 +5,14 @@ import tensorflow as tf
 import tensorflow.keras as kr
 import generator as generator
 import discriminator as discriminator
+import os
 
 class GAN:
 
     def __init__(self, 
                 batch_size, #  int, 
                 epoch,  #  int,
-                noise_dim,  #  tuple, [batchsize, noise_dim]
+                noise_dim,  #  int,
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 ):
         self.epoch = epoch
@@ -26,13 +27,18 @@ class GAN:
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
     
-    def train(self, real_images):
+    def train(self, image_dataset):
 
-        for epoch in range(self.epochs):
-            pass
+        for epoch in range(self.epoch):
 
-        return 
+            for real_images in image_dataset:
+            
+                self.train_step(real_images)
 
+            if (epoch + 1) % 15 == 0:   # output stats
+                pass
+                self.checkpoint.save(file_prefix = "origin_gan")
+                
     
     @tf.function
     def train_step(self, real_images):   # one training step
@@ -52,6 +58,16 @@ class GAN:
 
         self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
         self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
+
+    def checkpoint(self, checkpoint_prefix="origin_gan_"):            
+        checkpoint_dir = './training_checkpoints'
+        self.checkpoint_prefix = os.path.join(checkpoint_dir, "origin_gan_")
+        self.checkpoint = tf.train.Checkpoint(generator_optimizer=self.G_opt,
+                                 discriminator_optimizer=self.D_opt,
+                                 generator=self.generator,
+                                 discriminator=self.discriminator)
+
+
 
     def D_loss(self, real_output, fake_output):
         return self.loss_metric(tf.ones_like(real_output), real_output) \
