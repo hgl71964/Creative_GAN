@@ -35,7 +35,6 @@ class GAN:
         for epoch in range(self.epoch):
             print("Epoch: ", epoch+1)
             for real_images in image_dataset:
-                print(real_images.shape)
                 self._train_step(real_images)  #  real_images: [batch_size, rows, cols, channels]: (batch_size, 28, 28, 1)
 
             if (epoch + 1) % 15 == 0:   # output stats && save models
