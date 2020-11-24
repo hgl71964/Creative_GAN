@@ -41,10 +41,10 @@ class GAN:
                 
     
     @tf.function
-    def _train_step(self, real_images):   # one training step
+    def _train_step(self, real_images):   
         noise = tf.random.normal([self.batch_size, self.noise_dim])
 
-        with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+        with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
             fake_images = self.generator(noise, training = True)
 
             real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
