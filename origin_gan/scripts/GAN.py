@@ -15,6 +15,7 @@ class GAN:
                 noise_dim,  #  int,
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 checkpoint_prefix = "origin_gan",  #  string
+                device = "CPU",  # string 
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
@@ -24,6 +25,7 @@ class GAN:
 
         self.generator = generator.generator_model()
         self.discriminator = discriminator.discriminator_model() 
+        self.device = device
 
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
@@ -45,24 +47,25 @@ class GAN:
     def _train_step(self, real_images):   
         noise = tf.random.normal([self.noise_batch_size, self.noise_dim])
 
-        with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
-            fake_images = self.generator(noise, training = True)
+        with tf.device(f"{self.device}"):
+            with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
+                fake_images = self.generator(noise, training = True)
 
-            real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
-            fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
+                real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
+                fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
 
-            G_loss = self._G_loss(fake_output)
-            D_loss = self._D_loss(real_output, fake_output)
+                G_loss = self._G_loss(fake_output)
+                D_loss = self._D_loss(real_output, fake_output)
 
-            #  show stats
-            tf.print("G_loss: ", G_loss)
-            tf.print("D_loss: ", D_loss)
+                #  show stats
+                tf.print("G_loss: ", G_loss)
+                tf.print("D_loss: ", D_loss)
 
-        G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
-        D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
+            G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
+            D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
 
-        self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
-        self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
+            self.G_opt.apply_gradients(zip(G_grad, self.generator.trainable_variables))
+            self.D_opt.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
 
     def _D_loss(self, real_output, fake_output):
         return self.loss_metric(tf.ones_like(real_output), real_output) \
