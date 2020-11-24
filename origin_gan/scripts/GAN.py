@@ -53,6 +53,10 @@ class GAN:
             G_loss = self._G_loss(fake_output)
             D_loss = self._D_loss(real_output, fake_output)
 
+            #  show stats
+            tf.print(G_loss)
+            tf.print(D_loss)
+
         G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
         D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
 
