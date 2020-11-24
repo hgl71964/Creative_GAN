@@ -18,7 +18,7 @@ class GAN:
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
-        self.batch_size = noise_batch_size
+        self.noise_batch_size = noise_batch_size
         self.G_opt = kr.optimizers.Adam(lr[0])
         self.D_opt = kr.optimizers.Adam(lr[1])  
 
@@ -43,7 +43,7 @@ class GAN:
     
     @tf.function
     def _train_step(self, real_images):   
-        noise = tf.random.normal([self.batch_size, self.noise_dim])
+        noise = tf.random.normal([self.noise_batch_size, self.noise_dim])
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
             fake_images = self.generator(noise, training = True)
