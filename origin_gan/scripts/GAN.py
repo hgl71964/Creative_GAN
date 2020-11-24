@@ -34,14 +34,14 @@ class GAN:
 
         for epoch in range(self.epoch):
             for real_images in image_dataset:
-                self.train_step(real_images)
+                self._train_step(real_images)  #  real_images: [batch_shape, rows, cols, channels]: (None, 28, 28, 1)
 
             if (epoch + 1) % 15 == 0:   # output stats
                 self.checkpoint.save(file_prefix = "origin_gan")
                 
     
     @tf.function
-    def train_step(self, real_images):   # one training step
+    def _train_step(self, real_images):   # one training step
         noise = tf.random.normal([self.batch_size, self.noise_dim])
 
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:

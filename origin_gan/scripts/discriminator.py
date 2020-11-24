@@ -22,7 +22,7 @@ class discriminator_model(kr.Model):
     def call(self, x, training = False):
         """
         Args:
-            x: tensor; shape -> [batch_size, height, width, channel_num]
+            x: tensor; shape -> [batch_size, height, width, channel_num]: (None, 28, 28, 1)
         """
 
         x = self.a1(self.l1(x))
