@@ -44,14 +44,14 @@ class GAN:
             real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
             fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
 
-            gen_loss = self.G_loss(fake_output)
-            disc_loss = self.D_loss(real_output, fake_output)
+            G_loss = self.G_loss(fake_output)
+            D_loss = self.D_loss(real_output, fake_output)
 
-        G_grad = gen_tape.gradient(gen_loss, self.generator.trainable_variables)
-        D_grad = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
+        G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
+        D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
 
         generator_optimizer.apply_gradients(zip(G_grad, self.generator.trainable_variables))
-        discriminator_optimizer.apply_gradients(zip(D_grad, discriminator.trainable_variables))
+        discriminator_optimizer.apply_gradients(zip(D_grad, self.discriminator.trainable_variables))
 
     def D_loss(self, real_output, fake_output):
         return self.loss_metric(tf.ones_like(real_output), real_output) \
