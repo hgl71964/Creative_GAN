@@ -33,9 +33,8 @@ class GAN:
 
     
     def train(self, image_dataset):
-
         for epoch in range(self.epoch):
-            print("Epoch: ", epoch+1)
+            print("epoch: ", epoch+1)
 
             total_G_loss, total_D_loss = tf.zeros((1,)), tf.zeros((1,))
 
