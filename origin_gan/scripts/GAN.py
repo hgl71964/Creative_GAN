@@ -3,8 +3,8 @@ GAN implementation
 """
 import tensorflow as tf
 import tensorflow.keras as kr
-import origin_gan.scripts.generator as generator
-import origin_gan.scripts.discriminator as discriminator
+import generator as generator
+import discriminator as discriminator
 
 class GAN:
 

@@ -26,11 +26,11 @@ class discriminator_model(kr.Model):
         """
 
         x = self.a1(self.l1(x))
-        if train:
+        if training:
             x = self.p1(x)
 
         x = self.a2(self.l2(x))
-        if train:
+        if training:
             x = self.p2(x)
         
         return self.d2(self.d1(x))  # [batch_size, 1]
@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
 
     m = discriminator_model()
-    print(m(data, train = False))
+    print(m(data, training = False))
 
 
     
