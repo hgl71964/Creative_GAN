@@ -10,7 +10,7 @@ import os
 class GAN:
 
     def __init__(self, 
-                batch_size, #  int, 
+                noise_batch_size, #  int, 
                 epoch,  #  int,
                 noise_dim,  #  int,
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
@@ -18,7 +18,7 @@ class GAN:
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
-        self.batch_size = batch_size
+        self.batch_size = noise_batch_size
         self.G_opt = kr.optimizers.Adam(lr[0])
         self.D_opt = kr.optimizers.Adam(lr[1])  
 
