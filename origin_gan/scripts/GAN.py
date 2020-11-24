@@ -14,7 +14,7 @@ class GAN:
                 epoch,  #  int,
                 noise_dim,  #  int,
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
-                checkpoint_prefix = "origin_gan",
+                checkpoint_prefix = "origin_gan",  #  string
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
