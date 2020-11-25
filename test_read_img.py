@@ -1,0 +1,42 @@
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import os
+import PIL
+
+
+data_path = os.path.join(os.getcwd(), "data")
+
+print("")
+print()
+
+
+img_list = []
+for i in os.listdir(f"{data_path}"):
+    if i[-4:]=="jpeg":
+        img_list.append(i)
+print(img_list)
+
+
+"""  use matplotlib to process """
+# simg = mpimg.imread(f"{os.path.join(data_path, img_list[0])}")
+# print(simg.shape)  #  numpy data
+
+# #  plot the data
+# imgplot = plt.imshow(simg)
+# plt.show()
+
+
+image = PIL.Image.open(f"{os.path.join(data_path, img_list[0])}")
+# image.show()  #  plot image
+
+print(image.format) 
+print(image.mode) 
+print(image.size) 
+print(image.palette) 
+
+
+new_image = image.resize((400, 400))
+# new_image.show()
+
+re_image = new_image.resize((2284,3828))
+re_image.show()
