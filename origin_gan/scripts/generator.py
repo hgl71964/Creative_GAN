@@ -53,7 +53,7 @@ class generator_model_224(generator_base):
         
     
     def call(self, x, training = False):
-        return kr.activations.sigmoid(self.l(x));
+        return self.l(x);
 
 
 
