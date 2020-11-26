@@ -6,7 +6,6 @@ class img_reader:
 
     def __init__(self, path):
         self.path = path
-    
 
     def get_jpeg(self):
         self.img_list = []
@@ -18,7 +17,7 @@ class img_reader:
             n,  #  plot the number of image
             ):
 
-        if n < len(self.N):
+        if n < self.N:
             image = PIL.Image.open(f"{os.path.join(self.path, self.img_list[n])}")
         else:
             raise ValueError("Not enough data points")
