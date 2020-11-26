@@ -49,7 +49,6 @@ class img_reader:
             
             for batch in range(0, self.N, batch_size):
                 yield (self.images[batch:min(batch + batch_size, self.N)])
-        
         else:
             raise TypeError("haven't converted to numpy!")
 
