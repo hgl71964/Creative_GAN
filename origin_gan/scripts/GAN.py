@@ -25,7 +25,7 @@ class GAN:
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
         if model[0] is None:
-            self.generator = generator_model()
+            self.generator = generator_model_224()
             self.discriminator = discriminator_model() 
         else:
             self.generator, self.discriminator = model[0], model[1]
@@ -39,7 +39,7 @@ class GAN:
             total_G_loss, total_D_loss = tf.zeros((1,)), tf.zeros((1,))
 
             for real_images in image_dataset:
-                G_loss, D_loss = self._train_step(real_images)  #  real_images: [batch_size, rows, cols, channels]: (batch_size, 28, 28, 1)
+                G_loss, D_loss = self._train_step(real_images)  #  real_images: [batch_size, rows, cols, channels]: (batch_size, 28, 28, channel_nums)
                 total_G_loss+=G_loss
                 total_D_loss+=D_loss
 
@@ -87,12 +87,12 @@ class GAN:
 
 if __name__ == "__main__":
     
-    from generator import generator_model
+    from generator import generator_model_224
     from discriminator import discriminator_model
 
     gan = GAN(noise_batch_size=2, epoch=1, noise_dim=10)
 
-    image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
+    image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 3), stddev=10)).shuffle(buffer_size=10).batch(2)
 
     gan.train(image_dataset)
 
