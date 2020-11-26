@@ -3,8 +3,10 @@ GAN implementation
 """
 import tensorflow as tf
 import tensorflow.keras as kr
-import generator as generator
-import discriminator as discriminator
+# import .generator as generator
+# import .discriminator as discriminator
+from .generator import generator_model
+from .discriminator import discriminator_model
 import os
 
 class GAN:
@@ -28,8 +30,8 @@ class GAN:
         self.checkpoint(checkpoint_prefix = checkpoint_prefix)  #  for saving data
 
         if model[0] is None:  #  use default models
-            self.generator = generator.generator_model()
-            self.discriminator = discriminator.discriminator_model() 
+            self.generator = generator_model()
+            self.discriminator = discriminator_model() 
         else:
             self.generator, self.discriminator = model[0], model[1]
 
@@ -88,7 +90,7 @@ class GAN:
 
 
 if __name__ == "__main__":
-    gan = GAN(noise_batch_size=2, epoch=5, noise_dim=10)
+    gan = GAN(noise_batch_size=2, epoch=1, noise_dim=10)
 
     image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
 
