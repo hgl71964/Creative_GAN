@@ -5,8 +5,8 @@ import tensorflow as tf
 import tensorflow.keras as kr
 # import .generator as generator
 # import .discriminator as discriminator
-from .generator import generator_model
-from .discriminator import discriminator_model
+from generator import generator_model
+from discriminator import discriminator_model
 import os
 
 class GAN:
@@ -18,7 +18,6 @@ class GAN:
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 checkpoint_prefix = "origin_gan",  #  string
                 device = "CPU",  # string 
-                model=(None, None) ,  # (Generator, Discriminator)
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
@@ -27,14 +26,10 @@ class GAN:
         self.D_opt = kr.optimizers.Adam(lr[1])  
         self.device = device
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
+
+        self.generator = generator_model()
+        self.discriminator = discriminator_model() 
         self.checkpoint(checkpoint_prefix = checkpoint_prefix)  #  for saving data
-
-        if model[0] is None:  #  use default models
-            self.generator = generator_model()
-            self.discriminator = discriminator_model() 
-        else:
-            self.generator, self.discriminator = model[0], model[1]
-
     
     def train(self, image_dataset):
         for epoch in range(self.epoch):
