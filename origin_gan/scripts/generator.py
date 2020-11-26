@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow.keras as kr
 import matplotlib.pyplot as plt
 
-class generator_model(kr.Model):
+class generator_base(kr.Model):
 
     """
     Start with a Dense layer that takes a seed (random noise) as input, then upsample several times until you reach the desired image size of 28x28x1
@@ -26,12 +26,21 @@ class generator_model(kr.Model):
         self.l.add(kr.layers.BatchNormalization())
         self.l.add(kr.layers.LeakyReLU())
 
-        self.l.add(kr.layers.Conv2DTranspose(1, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, 1)
-
+        
     
     def call(self, x, training = False):
         return self.l(x);
 
+
+class generator_model(generator_base):
+    def __init__(self, 
+                out_channel_num = 1,
+                ):
+        super().__init__()
+        self.l.add(kr.layers.Conv2DTranspose(out_channel_num, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, 1)
+    
+    def call(self, x, training = False):
+        return self.l(x);
 
 
 if __name__ == "__main__":
@@ -45,11 +54,11 @@ if __name__ == "__main__":
 
     g = generator_model()
 
-    image = g(noise, train = False)
+    image = g(noise, training = False)
 
     print(image.shape)
 
-    plt.imshow(image[0, :, :, 0], cmap='gray')
+    plt.imshow(image[0, :, :, 0])  # cmap='gray') -> for gray scale
     plt.show()
 
 

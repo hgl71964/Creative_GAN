@@ -16,6 +16,7 @@ class GAN:
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 checkpoint_prefix = "origin_gan",  #  string
                 device = "CPU",  # string 
+                model=(None, None) ,  # (Generator, Discriminator)
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
@@ -23,8 +24,11 @@ class GAN:
         self.G_opt = kr.optimizers.Adam(lr[0])
         self.D_opt = kr.optimizers.Adam(lr[1])  
 
-        self.generator = generator.generator_model()
-        self.discriminator = discriminator.discriminator_model() 
+        if model[0] is None:
+            self.generator = generator.generator_model()
+            self.discriminator = discriminator.discriminator_model() 
+        else:
+            self.generator, self.discriminator = model[0], model[1]
         self.device = device
 
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
