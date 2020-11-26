@@ -28,6 +28,7 @@ print(img_list)
 
 """use PIL package to resize"""
 image = PIL.Image.open(f"{os.path.join(data_path, img_list[0])}")
+print(image.size)
 # image.show()  #  plot image
 
 # print(image.format) 
@@ -44,7 +45,13 @@ image = PIL.Image.open(f"{os.path.join(data_path, img_list[0])}")
 # print(image.palette) 
 # image.show()
 
-print(image.size)
 
+"""to numpy"""
 i = np.array(image)
+i = np.multiply(i, 1/225)
+
 print(i.shape)
+print(i[:,:,0])
+
+plt.imshow(i)
+plt.show()
