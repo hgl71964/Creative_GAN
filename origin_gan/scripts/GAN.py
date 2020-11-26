@@ -3,8 +3,7 @@ GAN implementation
 """
 import tensorflow as tf
 import tensorflow.keras as kr
-# import .generator as generator
-# import .discriminator as discriminator
+
 from generator import generator_model
 from discriminator import discriminator_model
 import os
@@ -29,6 +28,7 @@ class GAN:
 
         self.generator = generator_model()
         self.discriminator = discriminator_model() 
+
         self.checkpoint(checkpoint_prefix = checkpoint_prefix)  #  for saving data
     
     def train(self, image_dataset):
