@@ -48,13 +48,16 @@ class GAN:
                 tf.print("D_loss: ", total_D_loss)
             #     self.checkpoint.save(file_prefix = "origin_gan")
                 
-    @tf.function
+    # @tf.function
     def _train_step(self, real_images):   
         noise = tf.random.normal([self.noise_batch_size, self.noise_dim])
 
         with tf.device(f"{self.device}"):
             with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
                 fake_images = self.generator(noise, training = True)
+
+                tf.print(fake_images.shape)
+                tf.print(real_images.shape)
 
                 real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
                 fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
@@ -90,9 +93,11 @@ if __name__ == "__main__":
     from generator import generator_model_224
     from discriminator import discriminator_model
 
-    gan = GAN(noise_batch_size=2, epoch=1, noise_dim=10)
+    g = generator_model_224(3); m = discriminator_model()
 
-    image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 3), stddev=10)).shuffle(buffer_size=10).batch(2)
+    gan = GAN(noise_batch_size=2, epoch=1, noise_dim=10, model = (g,m))
+
+    image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 224, 224, 3), stddev=10)).shuffle(buffer_size=10).batch(2)
 
     gan.train(image_dataset)
 
