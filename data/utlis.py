@@ -43,6 +43,15 @@ class img_reader:
         else:
             for i in range(self.N):
                 self.images[i] = np.array(self.images[i])
+    
+    def batcher(self, batch_size):
+        if isinstance(self.images[0], np.ndarray):
+            
+            for batch in range(0, self.N, batch_size):
+                yield (self.images[batch:min(batch + batch_size, self.N)])
+        
+        else:
+            raise TypeError("haven't converted to numpy!")
 
     @property
     def N(self):
