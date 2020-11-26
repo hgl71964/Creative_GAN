@@ -3,7 +3,6 @@ GAN implementation
 """
 import tensorflow as tf
 import tensorflow.keras as kr
-
 import os
 
 class GAN:
