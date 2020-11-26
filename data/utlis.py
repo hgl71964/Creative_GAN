@@ -43,13 +43,20 @@ class img_reader:
             print("Haven't loaded images")
         else:
             for i in range(self.N):
-                self.images[i] = tf.convert_to_tensor(np.array(self.images[i]))
-    
+                t = tf.convert_to_tensor(np.array(self.images[i]))
+
+                s = tf.reduce_sum(t,axis=2)  #  normalisation
+                r = t[:,:,0]/s
+                g = t[:,:,1]/s, 
+                b = t[:,:,2]/s
+                self.images[i]=tf.concat((tf.reshape(r,(224,224,1)),tf.reshape(g,(224,224,1)), tf.reshape(b,(224,224,1))),axis=2)
+
+
     def batcher(self, batch_size):
         if isinstance(self.images[0], tf.Tensor):
             
             for batch in range(0, self.N, batch_size):
-                yield (self.images[batch:min(batch + batch_size, self.N)])
+                yield tf.convert_to_tensor(self.images[batch:min(batch + batch_size, self.N)])
         else:
             raise TypeError("haven't converted to tensor!")
 
