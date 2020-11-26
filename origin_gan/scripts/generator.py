@@ -39,7 +39,7 @@ class generator_model(generator_base):
     
     def call(self, x, training = False):
         return self.l(x)
-        
+
 class generator_model_224(generator_base):
     def __init__(self, 
                 out_channel_num = 1,
@@ -50,7 +50,7 @@ class generator_model_224(generator_base):
         self.l.add(kr.layers.LeakyReLU())
 
         self.l.add(kr.layers.Conv2DTranspose(32, (5, 5), strides=(4, 4), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 224, 224, out_channel_num)
-        self.l.add(kr.activations.sigmoid())
+        self.l.add(kr.layers.Activation(kr.activations.sigmoid()))
     
     def call(self, x, training = False):
         return self.l(x);
