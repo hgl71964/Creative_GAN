@@ -48,7 +48,7 @@ class GAN:
                 tf.print("D_loss: ", total_D_loss)
             #     self.checkpoint.save(file_prefix = "origin_gan")
                 
-    # @tf.function
+    @tf.function
     def _train_step(self, real_images):   
         noise = tf.random.normal([self.noise_batch_size, self.noise_dim])
 
@@ -56,8 +56,8 @@ class GAN:
             with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:  # one training step, i.e. the k hyperparameter = 1;
                 fake_images = self.generator(noise, training = True)
 
-                tf.print(fake_images.shape)
-                tf.print(real_images.shape)
+                # tf.print(fake_images.shape)
+                # tf.print(real_images.shape)
 
                 real_output = self.discriminator(real_images, training = True)   #  D(x) -> [batch_size, 1]
                 fake_output = self.discriminator(fake_images, training = True)    #  D(G(z)) -> [batch_size, 1]
