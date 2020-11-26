@@ -7,6 +7,7 @@ class img_reader:
 
     def __init__(self, path):
         self.path = path
+        self.images = []
 
     def get_jpeg(self):
         self.img_list = []
@@ -25,8 +26,8 @@ class img_reader:
     def load(self):
         self.images = [None]*self.N
         for i in range(self.N):
-            img = np.array(PIL.Image.open(f"{os.path.join(self.path, self.img_list[i])}"))
-            self.images[i] = img
+            self.images[i] = PIL.Image.open(f"{os.path.join(self.path, self.img_list[i])}")
+            
 
     def thumbnail(self, *size):
         for i in self.images:
@@ -35,6 +36,13 @@ class img_reader:
     def resize(self, *size):
         for i in range(self.N):
             self.images[i] = self.images[i].resize(*size)
+
+    def to_numpy(self):
+        if not self.images: 
+            print("Haven't loaded images")
+        else:
+            for i in range(self.N):
+                self.images[i] = np.array(self.images[i])
 
     @property
     def N(self):
