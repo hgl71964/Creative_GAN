@@ -14,9 +14,7 @@ class img_reader:
             if i[-4:]=="jpeg":
                 self.img_list.append(i)
     
-    def plot(self, 
-            n,  #  plot the number of image
-            ):
+    def plot(self, n:  "plot the number of image"):
 
         if n < self.N:
             image = PIL.Image.open(f"{os.path.join(self.path, self.img_list[n])}")
