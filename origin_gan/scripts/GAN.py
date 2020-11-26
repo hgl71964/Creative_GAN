@@ -4,8 +4,6 @@ GAN implementation
 import tensorflow as tf
 import tensorflow.keras as kr
 
-from generator import generator_model
-from discriminator import discriminator_model
 import os
 
 class GAN:
@@ -17,6 +15,7 @@ class GAN:
                 lr = (1e-4, 1e-4),  #  learning rate,  tuple -> [generator_lr, discriminator_lr]
                 checkpoint_prefix = "origin_gan",  #  string
                 device = "CPU",  # string 
+                model =(None, None),  # (generator, discriminator)
                 ):
         self.epoch = epoch
         self.noise_dim = noise_dim
@@ -26,8 +25,11 @@ class GAN:
         self.device = device
         self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
 
-        self.generator = generator_model()
-        self.discriminator = discriminator_model() 
+        if model[0] is None:
+            self.generator = generator_model()
+            self.discriminator = discriminator_model() 
+        else:
+            self.generator, self.discriminator = model[0], model[1]
 
         self.checkpoint(checkpoint_prefix = checkpoint_prefix)  #  for saving data
     
@@ -85,6 +87,10 @@ class GAN:
 
 
 if __name__ == "__main__":
+    
+    from generator import generator_model
+    from discriminator import discriminator_model
+
     gan = GAN(noise_batch_size=2, epoch=1, noise_dim=10)
 
     image_dataset = tf.data.Dataset.from_tensor_slices(tf.random.normal(shape=(4, 28, 28, 1), stddev=10)).shuffle(buffer_size=10).batch(2)
