@@ -50,10 +50,10 @@ class generator_model_224(generator_base):
         self.l.add(kr.layers.LeakyReLU())
 
         self.l.add(kr.layers.Conv2DTranspose(32, (5, 5), strides=(4, 4), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 224, 224, out_channel_num)
-        self.l.add(kr.layers.Activation(kr.activations.sigmoid()))
+        
     
     def call(self, x, training = False):
-        return self.l(x);
+        return kr.activations.sigmoid(self.l(x));
 
 
 
