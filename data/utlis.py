@@ -1,6 +1,7 @@
 import os
 import PIL
 import numpy as np
+import tensorflow as tf
 
 
 class img_reader:
@@ -37,12 +38,12 @@ class img_reader:
         for i in range(self.N):
             self.images[i] = self.images[i].resize(*size)
 
-    def to_numpy(self):
+    def to_tensor(self):
         if not self.images: 
             print("Haven't loaded images")
         else:
             for i in range(self.N):
-                self.images[i] = np.array(self.images[i])
+                self.images[i] = tf.convert_to_tensor(np.array(self.images[i]))
     
     def batcher(self, batch_size):
         if isinstance(self.images[0], np.ndarray):
