@@ -26,8 +26,6 @@ class generator_base(kr.Model):
         self.l.add(kr.layers.BatchNormalization())
         self.l.add(kr.layers.LeakyReLU())
 
-        
-    
     def call(self, x, training = False):
         return self.l(x);
 
@@ -37,10 +35,25 @@ class generator_model(generator_base):
                 out_channel_num = 1,
                 ):
         super().__init__()
-        self.l.add(kr.layers.Conv2DTranspose(out_channel_num, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, 1)
+        self.l.add(kr.layers.Conv2DTranspose(out_channel_num, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, out_channel_num)
     
     def call(self, x, training = False):
         return self.l(x);
+class generator_model_224(generator_base):
+    def __init__(self, 
+                out_channel_num = 1,
+                ):
+        super().__init__()  #  output_shape == (None, 14, 14, 64)
+        self.l.add(kr.layers.Conv2DTranspose(32, (5, 5), strides=(4, 4), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 56, 56, out_channel_num)
+        self.l.add(kr.layers.BatchNormalization())
+        self.l.add(kr.layers.LeakyReLU())
+
+        self.l.add(kr.layers.Conv2DTranspose(32, (5, 5), strides=(4, 4), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 224, 224, out_channel_num)
+        self.l.add(kr.activations.sigmoid())
+    
+    def call(self, x, training = False):
+        return self.l(x);
+
 
 
 if __name__ == "__main__":
