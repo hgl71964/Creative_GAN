@@ -15,7 +15,13 @@ class img_reader:
         for i in os.listdir(f"{self.path}"):
             if i[-4:]=="jpeg":
                 self.img_list.append(i)
-    
+                
+    def get_jpg(self):
+        self.img_list = []
+        for i in os.listdir(f"{self.path}"):
+            if i[-3:]=="jpg":
+                self.img_list.append(i)
+        
     def plot(self, n:  "plot the number of image"):
 
         if n < self.N:
