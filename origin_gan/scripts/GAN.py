@@ -23,17 +23,15 @@ class GAN:
         self.noise_batch_size = noise_batch_size
         self.G_opt = kr.optimizers.Adam(lr[0])
         self.D_opt = kr.optimizers.Adam(lr[1])  
+        self.device = device
+        self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
+        self.checkpoint(checkpoint_prefix = checkpoint_prefix)  #  for saving data
 
-        if model[0] is None:
+        if model[0] is None:  #  use default models
             self.generator = generator.generator_model()
             self.discriminator = discriminator.discriminator_model() 
         else:
             self.generator, self.discriminator = model[0], model[1]
-        self.device = device
-
-        self.loss_metric = kr.losses.BinaryCrossentropy()  #   from_logits=True -> smoother? 
-
-        self.checkpoint(checkpoint_prefix = checkpoint_prefix)
 
     
     def train(self, image_dataset):
