@@ -46,12 +46,12 @@ class img_reader:
                 self.images[i] = tf.convert_to_tensor(np.array(self.images[i]))
     
     def batcher(self, batch_size):
-        if isinstance(self.images[0], np.ndarray):
+        if isinstance(self.images[0], tf.Tensor):
             
             for batch in range(0, self.N, batch_size):
                 yield (self.images[batch:min(batch + batch_size, self.N)])
         else:
-            raise TypeError("haven't converted to numpy!")
+            raise TypeError("haven't converted to tensor!")
 
     @property
     def N(self):
