@@ -19,6 +19,7 @@ class img_reader:
 
         if n < self.N:
             image = PIL.Image.open(f"{os.path.join(self.path, self.img_list[n])}")
+            image.show()
         else:
             raise ValueError("Not enough data points")
 
