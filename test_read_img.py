@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 import PIL
+import numpy as np
 
 
 data_path = os.path.join(os.getcwd(), "data")
@@ -29,16 +30,21 @@ print(img_list)
 image = PIL.Image.open(f"{os.path.join(data_path, img_list[0])}")
 # image.show()  #  plot image
 
-print(image.format) 
-print(image.mode) 
-print(image.size) 
-print(image.palette) 
-new_image = image.resize((400, 400))
-new_image.show()
+# print(image.format) 
+# print(image.mode) 
+# print(image.size) 
+# print(image.palette) 
+# new_image = image.resize((400, 400))
+# new_image.show()
 
-image.thumbnail((400,400))  #  preserve aspect ratio
-print(image.format) 
-print(image.mode) 
-print(image.size) 
-print(image.palette) 
-image.show()
+# image.thumbnail((400,400))  #  preserve aspect ratio
+# print(image.format) 
+# print(image.mode) 
+# print(image.size) 
+# print(image.palette) 
+# image.show()
+
+print(image.size)
+
+i = np.array(image)
+print(i.shape)
