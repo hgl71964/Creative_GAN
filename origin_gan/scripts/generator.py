@@ -38,7 +38,8 @@ class generator_model(generator_base):
         self.l.add(kr.layers.Conv2DTranspose(out_channel_num, (5, 5), strides=(2, 2), padding='same', use_bias=False, activation='tanh'))  # output_shape == (None, 28, 28, out_channel_num)
     
     def call(self, x, training = False):
-        return self.l(x);
+        return self.l(x)
+        
 class generator_model_224(generator_base):
     def __init__(self, 
                 out_channel_num = 1,
