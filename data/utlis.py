@@ -1,5 +1,6 @@
 import os
 import PIL
+import numpy as np
 
 
 class img_reader:
@@ -22,6 +23,20 @@ class img_reader:
             image.show()
         else:
             raise ValueError("Not enough data points")
+    
+    def load(self):
+        self.images = [None]*self.N
+        for i in range(self.N):
+            img = np.array(PIL.Image.open(f"{os.path.join(self.path, self.img_list[i])}"))
+            self.images[i] = img
+
+    def thumbnail(self, *size):
+        for i in self.images:
+            i.thumbnail(*size)  #  preserve aspect ratio
+
+    def resize(self, *size):
+        for i in range(self.N):
+            self.images[i] = self.images[i].resize(*size)
 
     @property
     def N(self):
