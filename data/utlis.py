@@ -57,7 +57,7 @@ class img_reader:
                     b = t[:,:,2]/s
                     self.images[i]=tf.concat((tf.reshape(r,(224,224,1)),tf.reshape(g,(224,224,1)), tf.reshape(b,(224,224,1))),axis=2)
                 else:
-                    self.images[i] = t
+                    self.images[i] = tf.cast(t, dtype=tf.float32)
 
 
     def batcher(self, batch_size):
