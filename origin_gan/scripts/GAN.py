@@ -43,7 +43,7 @@ class GAN:
                 total_G_loss+=G_loss
                 total_D_loss+=D_loss
 
-            if (epoch + 1) % 10 == 0:   # output stats && save models very 15 epochs
+            if (epoch + 1) % 2 == 0:   # output stats && save models very 15 epochs
                 tf.print("G_loss: ", total_G_loss)
                 tf.print("D_loss: ", total_D_loss)
             #     self.checkpoint.save(file_prefix = "origin_gan")
