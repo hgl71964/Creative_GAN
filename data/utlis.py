@@ -49,7 +49,7 @@ class img_reader:
             print("Haven't loaded images")
         else:
             for i in range(self.N):
-                t = tf.convert_to_tensor(np.array(self.images[i]))
+                t = tf.convert_to_tensor(np.array(self.images[i]), dtype=tf.float32)
                 if normalisation:
                     s = tf.reduce_sum(t,axis=2)  #  normalisation
                     r = t[:,:,0]/s
