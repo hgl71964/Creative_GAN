@@ -53,7 +53,8 @@ class generator_model_224(generator_base):
         
     
     def call(self, x, training = False):
-        return self.l(x);
+        return tf.cast(tf.linalg.normalize(self.l(x), axis=3)[0]*225, tf.uint16)
+        
 
 
 
