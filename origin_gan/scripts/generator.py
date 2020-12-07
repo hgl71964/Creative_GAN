@@ -29,6 +29,11 @@ class generator_base(kr.Model):
     def call(self, x, training = False):
         return self.l(x);
 
+    def inference(self, x): 
+        return tf.cast(tf.linalg.normalize(self.l(x), axis=3)[0]*225, tf.uint8)  # output uint \in [0, 225]
+
+
+
 
 class generator_model(generator_base):
     def __init__(self, 
@@ -55,8 +60,8 @@ class generator_model_224(generator_base):
     def call(self, x, training = False):
         return self.l(x)
     
-    def inference(self, x):  # TODO: place inference in base class and inherit
-        return tf.cast(tf.linalg.normalize(self.l(x), axis=3)[0]*225, tf.uint8)  # output uint \in [0, 225]
+
+
         
 
 
