@@ -62,8 +62,11 @@ class Improved_GAN:
     
 
     def gradient_penalty(self, fake_images, real_images):
-        diff = fake_images - real_images
-        eta = tf.random.uniform
+        diff = fake_images - real_images  #  (batch_size, height, width, channel_num)
+        eta = tf.random.uniform(shape = (diff.shape))
+
+        interpolates = real_images + (eta * diff) #  TODO: understanding multi-dimensional multiplication
+
         return 
 
     def _D_loss(self, real_output, G_loss):
