@@ -5,7 +5,7 @@ import os
 class Improved_GAN:
     #  use technique from Improved Training of Wasserstein GANs
     def __init__(self, 
-                model =(None, None),  # (generator, discriminator)
+                model = (None, None),  # (generator, discriminator)
                 **kwargs,  #  for hyper-parameter
                 ):
         self.epoch = kwargs["epoch"]
@@ -16,6 +16,7 @@ class Improved_GAN:
         self.device = kwargs["device"]
         self.generator = model[0]
         self.discriminator = model[1]
+        self.lam = kwargs["lam"]  #  the trade-off hyper-parameter of gradient penalty
 
     
     def train(self, image_dataset):
@@ -50,7 +51,7 @@ class Improved_GAN:
 
                 G_loss = self._G_loss(fake_output)  #  -E{D[G(z)]}
                 D_loss = self._D_loss(real_output, fake_output, G_loss) # E{D[G(z)]} - E{D(x)}
-                Grad_penalty = self.gra
+                Grad_penalty = self.gradient_penalty(real_output, fake_output) #  lambda (||\nabla_x D(x)|| - 1)^2
 
             G_grad = gen_tape.gradient(G_loss, self.generator.trainable_variables)
             D_grad = disc_tape.gradient(D_loss, self.discriminator.trainable_variables)
@@ -60,7 +61,9 @@ class Improved_GAN:
         return G_loss, D_loss
     
 
-    def gradient_penalty(self, real_output, fake_output):
+    def gradient_penalty(self, fake_images, real_images):
+        diff = fake_images - real_images
+        eta = tf.random.uniform
         return 
 
     def _D_loss(self, real_output, G_loss):
